@@ -28,6 +28,9 @@ module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0
     /* Total degrees to turn thread */
     degrees = (height / pitch) * 360;
 
+    /* Overlap epsilon for clean differences */
+    overlap_epsilon = 0.01;
+
     intersection() {
         difference() {
             union() {
@@ -35,18 +38,22 @@ module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0
                 for (d = [-360:360 / fragments:degrees + 360]) {
                     translate([0, 0, d * (pitch / 360)])
                         rotate(d)
-                            rotate_extrude(angle = 360 / fragments)
+                            rotate_extrude(angle = 360 / fragments + overlap_epsilon)
                                 polygon([
-                                    [0, pitch / 2],
+                                    [0, pitch / 2 + overlap_epsilon],
                                     [r_min, pitch / 2],
                                     [r_min, pitch / 2 - w_min / 2],
                                     [r_maj, w_maj / 2],
                                     [r_maj, -w_maj / 2],
                                     [r_min, -(pitch / 2 - w_min / 2)],
                                     [r_min, -pitch / 2],
-                                    [0, -pitch / 2]
+                                    [0, -pitch / 2 - overlap_epsilon]
                                 ]);
                 }
+
+                /* Fill center to remove artifacts from internal threads */
+                if (type == "internal")
+                    cylinder(h = height, r = r_min / 2);
 
                 /* Bottom chamfer profile for internal threads (added) */
                 if (type == "internal" && chamfer_bottom > 0) {
