@@ -62,16 +62,17 @@ module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0
                             [0, chamfer_bottom],
                             [r_maj, chamfer_bottom],
                             [r_maj + chamfer_bottom, 0],
-                            [r_maj + chamfer_bottom, -chamfer_bottom],
-                            [0, -chamfer_bottom]
+                            [r_maj + chamfer_bottom, -overlap_epsilon],
+                            [0, -overlap_epsilon]
                         ]);
                 }
+
                 /* Top chamfer profile for internal threads (added) */
                 if (type == "internal" && chamfer_top > 0) {
                     rotate_extrude()
                         polygon([
-                            [0, height + chamfer_top],
-                            [r_maj + chamfer_top, height + chamfer_top],
+                            [0, height + overlap_epsilon],
+                            [r_maj + chamfer_top, height + overlap_epsilon],
                             [r_maj + chamfer_top, height],
                             [r_maj, height - chamfer_top],
                             [0, height - chamfer_top]
@@ -83,27 +84,28 @@ module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0
             if (type == "external" && chamfer_bottom > 0) {
                 rotate_extrude()
                     polygon([
-                        [r_maj - 1.5 * chamfer_bottom, -chamfer_bottom / 2],
-                        [r_maj + chamfer_bottom / 2, -chamfer_bottom / 2],
-                        [r_maj + chamfer_bottom / 2, 1.5 * chamfer_bottom]
+                        [r_maj - chamfer_bottom, -overlap_epsilon],
+                        [r_maj + chamfer_bottom, -overlap_epsilon],
+                        [r_maj + chamfer_bottom, chamfer_bottom * 2]
                     ]);
             }
+
             /* Top chamfer profile for external threads (subtracted) */
             if (type == "external" && chamfer_top > 0) {
                 rotate_extrude()
                     polygon([
-                        [r_maj - 1.5 * chamfer_top, height + chamfer_top / 2],
-                        [r_maj + chamfer_top / 2, height + chamfer_top / 2],
-                        [r_maj + chamfer_top / 2, height - 1.5 * chamfer_top]
+                        [r_maj - chamfer_top, height + overlap_epsilon],
+                        [r_maj + chamfer_top, height + overlap_epsilon],
+                        [r_maj + chamfer_top, height - chamfer_top * 2]
                     ]);
             }
         }
 
         /* Bounding cylinder (intersected) */
         if (type == "internal")
-            translate([0, 0, -chamfer_bottom])
-                cylinder(h = height + chamfer_top + chamfer_bottom, r = r_maj * 2);
+            translate([0, 0, -overlap_epsilon / 2])
+                cylinder(h = height + overlap_epsilon, r = r_maj + max(chamfer_top, chamfer_bottom));
         else
-            cylinder(h = height, r = r_maj * 2);
+            cylinder(h = height, r = r_maj);
     }
 }
