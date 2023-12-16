@@ -4,6 +4,10 @@
  * CC-BY-4.0
  *
  * Release Notes
+ *  * v2.0 - 12/16/2023
+ *      * Fix internal thread artifacts.
+ *      * Refactor clearances.
+ *      * Add clearance parameter.
  *  * v1.0 - 06/24/2020
  *      * Initial release.
  **********************************************************/
