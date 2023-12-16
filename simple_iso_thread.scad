@@ -8,22 +8,20 @@
  *      * Initial release.
  **********************************************************/
 
-module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0, chamfer_bottom=0, fragments=100) {
+module simple_iso_thread(diameter, pitch, height, type="external", chamfer_top=0, chamfer_bottom=0, clearance=0.05, fragments=100) {
     assert(type == "external" || type == "internal", "Unknown thread type: should be \"external\" or \"internal\".");
 
-    h = pitch / (2 * tan(30));
-
-    /* Clearances from ideal for major and minor radiuses */
-    c_maj = (type == "external") ? -(h / 8) : (h / 8);
-    c_min = (type == "external") ? -(h / 8) : (h / 8);
+    /* Scale factor from clearance */
+    scale_factor = (type == "external") ? (1 - clearance) : (1 + clearance);
 
     /* Major and minor radiuses */
-    r_maj = diameter / 2 + c_maj;
-    r_min = diameter / 2 - (5 * h / 8) + c_min;
+    h = pitch / (2 * tan(30));
+    r_maj = (diameter / 2) * scale_factor;
+    r_min = (diameter / 2 - (5 * h / 8)) * scale_factor;
 
-    /* Major and minor widths, with scaling for additional clearance */
-    w_maj = 2 * tan(30) * (h / 8 - c_maj) * (type == "external" ? 0.75 : 1);
-    w_min = 2 * tan(30) * (h / 4 + c_min) * (type == "external" ? 1 : 0.50);
+    /* Major and minor widths */
+    w_maj = (pitch / 8) * scale_factor;
+    w_min = (pitch / 4) * scale_factor;
 
     /* Total degrees to turn thread */
     degrees = (height / pitch) * 360;
