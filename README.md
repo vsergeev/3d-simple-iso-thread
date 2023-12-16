@@ -11,7 +11,11 @@
 </tr>
 </table>
 
-A simple, single-file modeled ISO thread module for OpenSCAD. Supports external threads (bolt) and internal threads (nut) with top and bottom chamfers. CSG compilation takes a few minutes, but produces functional metric and imperial threads.
+A simple, single-file modeled ISO thread module for OpenSCAD. Supports external
+threads (bolt) and internal threads (nut) with top and bottom chamfers. CSG
+compilation takes a few minutes, but produces functional metric and imperial
+threads. The default clearance parameter can be decreased for larger thread
+pitches and/or smaller layer heights.
 
 **Module:** [simple_iso_thread.scad](simple_iso_thread.scad)
 
@@ -24,6 +28,6 @@ A simple, single-file modeled ISO thread module for OpenSCAD. Supports external 
 * [m10-1.5x16-bolt.stl](stl/m10-1.5x16-bolt.stl)
 * [m10-1.5-nut.stl](stl/m10-1.5-nut.stl)
 
-**Recommended Print Settings:** 0.10mm layer height, no supports
+**Recommended Print Settings:** 0.20mm layer height, no supports
 
 **License**: [![CC-BY](https://i.creativecommons.org/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)
